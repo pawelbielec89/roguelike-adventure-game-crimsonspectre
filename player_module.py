@@ -1,6 +1,5 @@
 import common
 import os
-import ui
 from board_module import Board
 
 class Character:
@@ -43,3 +42,6 @@ class Character:
                 self.x_coord = new_x
                 self.y_coord = new_y
         
+    
+    def attack():
+        pass
