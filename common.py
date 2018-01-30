@@ -11,4 +11,9 @@ def getch():    # define function getch() to read exactly one character from use
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)  # change tty attributes for file descriptor fd from attributes list old_settings after transmitting all queued output
     return ch
 
+def set_step(starting_point, destination):
+    if starting_point > destination:
+        return -1
+    else:
+        return 1
 
