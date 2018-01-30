@@ -3,10 +3,22 @@ import os
 import sys
 from time import time
 from tabulate import tabulate
-
+from board_module import Board
+import common
+from player_module import Character
 
 def play_game():
     start = time()
+    player = Character(1, 1, "Rafaal", "@", 100, 10, 10)
+
+    board = Board(10, 10)
+    board.build_board()
+
+    while True:
+        os.system("clear")
+        board.draw_board()
+        player.move(board)
+
     your_time = int(time() - start)
     high_scores(your_time)
 
@@ -17,7 +29,7 @@ def helps():
 
 def show_scores():
     os.system("clear")
-    print_text.print_scores()
+    print_text.printed("scores.txt")
     headers = ["name", "time spent"]
     with open("high_score.txt", "r") as file:
         lines = file.readlines()
@@ -39,14 +51,16 @@ def saving_to_file_highscore(high_score):
         f.write("\n")
 
 
-def intro():
-    pass
+def info():
+    os.system("clear")
+    print_text.printed("info.txt")
+    input("Press Enter to continue...")
 
 
 def choose():
     list_options = ["(S)how scores",
                 "(H)elp",
-                "(I)ntro",
+                "(I)nfo",
                 "(T)erminate"]
     print_text.print_menu(list_options, "(P)lay Game")
 
@@ -58,7 +72,7 @@ def choose():
     elif option == "h":
         helps()
     elif option == "i":
-        intro()
+        info()
     elif option == "t":
         sys.exit(0)
     else:

@@ -14,8 +14,8 @@ def print_menu(list_options, play):
 
 
 
-def print_scores():
-    with open("scores.txt", "r") as file:
+def printed(files):
+    with open(files, "r") as file:
         lines = file.readlines()
         for line in lines:
             print(line[:-1])

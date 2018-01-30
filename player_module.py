@@ -12,7 +12,7 @@ class Character:
         self.health_points = health_points
         self.damage = damage
         self.dexterity = dexterity
-    
+
     def move(self, board):
         repeat = True
 
@@ -41,7 +41,7 @@ class Character:
                 board.update_board(self.x_coord, self.y_coord, new_x, new_y)
                 self.x_coord = new_x
                 self.y_coord = new_y
-        
-    
+
+
     def attack():
         pass
