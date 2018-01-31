@@ -19,18 +19,18 @@ class Board:
             print(*row, sep="")
 
 
-    def calculate_dropping_chance(self, probability):
-        if uniform(0,1) < probability:
-            return True
-        else:
-            return False
-
     def drop_items(self):
-        for row in range(len(self.board)):
-            for column in range(len(self.board[row])):
-                is_dropped = self.calculate_dropping_chance(0.02)
-                if self.board[row][column] == self.FLOOR and is_dropped:
-                    self.board[row][column] = self.ITEM
+        number_of_items = randint(10,20)
+        x = 0
+        y = 0
+
+        for i in range (number_of_items):
+
+            while(self.board[x][y] != self.FLOOR):
+                x = randint(1,self.height-1)
+                y = randint(1,self.width-1)
+            
+            self.board[x][y] = self.ITEM
 
                     
 
