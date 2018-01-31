@@ -7,6 +7,10 @@ from board_module import Board
 import common
 from player_module import Character
 
+def boss():
+    print_text.printed("boss.txt")
+    input("\nPress Enter to continue...")
+
 def intro():
     os.system("clear")
     print_text.printed("intro.txt")
