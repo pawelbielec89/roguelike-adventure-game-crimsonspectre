@@ -6,9 +6,7 @@ import time
 
 class Character:
 
-    def __init__ (self, x_coord, y_coord, name, avatar, health_points, damage, dexterity):
-        self.x_coord = x_coord
-        self.y_coord = y_coord
+    def __init__ (self, name, avatar, health_points, damage, dexterity):
         self.name = name
         self.avatar = avatar
         self.health_points = health_points

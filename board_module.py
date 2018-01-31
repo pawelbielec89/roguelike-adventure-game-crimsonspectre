@@ -19,13 +19,27 @@ class Board:
             print(*row, sep="")
 
 
+    def place_monsters(self, monsters_list):
+        number_of_monsters = randint(10,20)
+        x = 0
+        y = 0
+
+        for i in range(number_of_monsters):
+            scope = len(monsters_list)-1
+            monster = monsters_list[randint(0,scope)]
+            while(self.board[x][y] != self.FLOOR):
+                x = randint(1,self.height-1)
+                y = randint(1,self.width-1)
+            
+            self.board[x][y] = monster.avatar
+
+
     def drop_items(self):
         number_of_items = randint(10,20)
         x = 0
         y = 0
 
         for i in range (number_of_items):
-
             while(self.board[x][y] != self.FLOOR):
                 x = randint(1,self.height-1)
                 y = randint(1,self.width-1)
@@ -71,7 +85,7 @@ class Board:
         return 3, 3
 
 
-    def generate_dungeon(self, avatar):
+    def generate_dungeon(self, player, monsters_list):
         BOARD_HEIGHT = self.height  
         BOARD_WIDTH = self.width   
         print(BOARD_HEIGHT, BOARD_WIDTH)
@@ -92,8 +106,9 @@ class Board:
             # set coords of new room as starting point for next corridor
             from_x, from_y = to_x, to_y
 
-        self.board[1][1] = avatar       
+        self.board[1][1] = player       
         self.drop_items()
+        self.place_monsters(monsters_list)
 
     def build_board(self):
         BOARD_HEIGHT = self.height  
