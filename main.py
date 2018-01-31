@@ -8,12 +8,19 @@ import common
 from player_module import Character
 
 def intro():
-    
+    os.system("clear")
+    print_text.printed("intro.txt")
+    print("""\t\tYou wake up in a dark basement,
+            slightly stunned and confused,
+            You do not remember anything,
+            You don't feel much,
+            You have only one desire - BLOOD""")
+    input("\nPress Enter to continue...")
 
 
 def play_game():
     start = time()
-
+    intro()
     x = 1
     y = 1
 
@@ -32,7 +39,9 @@ def play_game():
 
 
 def helps():
-    pass
+    os.system("clear")
+    print_text.printed("help.txt")
+    input("Press Enter to continue...")
 
 
 def show_scores():
