@@ -7,8 +7,8 @@ class Board:
     def __init__ (self, height, width):
         self.height = height
         self.width = width
-        self.WALL = '\033[37;47m#\033[0m' 
-        self.FLOOR = ' '
+        self.WALL = ' ' 
+        self.FLOOR = '\033[37;47m#\033[0m'
 
 
     def draw_board(self):  # print the list given as an argument
@@ -45,6 +45,7 @@ class Board:
 
         return start_position_x, start_position_y
 
+
     def create_first_room(self):
         for i in range(1,7):
             for j in range(1,7):
@@ -75,12 +76,9 @@ class Board:
             from_x, from_y = to_x, to_y
         
 
-
     def build_board(self):
         BOARD_HEIGHT = self.height  
-        BOARD_WIDTH = self.width   
-        WALL = '#' 
-        FLOOR = ' ' 
+        BOARD_WIDTH = self.width
         PLAYER = '@' 
         self.board = []  
 
@@ -88,24 +86,22 @@ class Board:
             line = []   # declare empty list line
             for j in range(BOARD_WIDTH):    # loop in range from 0 to width of board
                 if i == 0 or i == BOARD_HEIGHT - 1 or j == 0 or j == BOARD_WIDTH - 1:    # do the following statements if conditions are fullfilled
-                    line.append(WALL)   # add constant WALL ('#') to the list line
+                    line.append(self.WALL)   # add constant WALL ('#') to the list line
                 else:   # do the following statement if conditions are not fullfilled
-                    line.append(FLOOR)  # add constant FLOOR (' ') to the list line
+                    line.append(self.FLOOR)  # add constant FLOOR (' ') to the list line
             self.board.append(line)  # add list line to the list board
         
         # set player position
         self.board[1][1] = PLAYER
     
     
-    
-
     def check_collision(self, x, y):
-        if self.board[x][y] == '#':
+        if self.board[x][y] == self.WALL:
             return True
         else:
             return False
 
     
-    def update_board(self, previous_x, previous_y, new_x, new_y):
-        self.board[new_x][new_y] = '@'
-        self.board[previous_x][previous_y] = ' '
+    def update_board(self, previous_x, previous_y, new_x, new_y, avatar):
+        self.board[new_x][new_y] = avatar
+        self.board[previous_x][previous_y] = self.FLOOR
