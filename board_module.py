@@ -12,6 +12,7 @@ class Board:
 
 
     def draw_board(self):  # print the list given as an argument
+        os.system("clear")
 
         for i in self.board: # loop through first dimension of board
             print(*i, sep="")
@@ -54,7 +55,7 @@ class Board:
         return 3, 3
 
 
-    def generate_dungeon(self):
+    def generate_dungeon(self, avatar):
         BOARD_HEIGHT = self.height  
         BOARD_WIDTH = self.width   
         print(BOARD_HEIGHT, BOARD_WIDTH)
@@ -74,7 +75,8 @@ class Board:
             self.generate_corridor(from_x, to_x, from_y, to_y)
             # set coords of new room as starting point for next corridor
             from_x, from_y = to_x, to_y
-        
+
+        self.board[1][1] = avatar       
 
     def build_board(self):
         BOARD_HEIGHT = self.height  
