@@ -6,14 +6,14 @@ from random import randint
 
 
 def main():
-    monsters = [["Rat", "\033[30;47mR\033[0m", 20, 5, 2], 
-                ["Bat", "\033[30;47mB\033[0m", 40, 10, 4], 
-                ["Snake", "\033[30;47mS\033[0m", 60, 15, 6]]
+    monsters = [["Rat", "R", 20, 20, 5, 2], 
+                ["Bat", "B", 40, 40, 10, 4], 
+                ["Snake", "S", 60, 60, 15, 6]]
     monsters_list = []
     number_of_monsters = randint(10,20)
     inventory = {}
 
-    player = player_module.Player(1,1,"Player", "V", 100, 10, 10, "male", 100, inventory)
+    player = player_module.Player(1,1,"Player", "V", 10000, 15, 1, "male", 100, inventory)
 
     for monster_properties in monsters:
         monster = player_module.Character(*monster_properties)
@@ -24,7 +24,14 @@ def main():
 
     while True:
         dungeon.draw_board()
-        player.move(dungeon)
+        x,y = player.move(dungeon, monsters_list)
+        collision = dungeon.check_collision(player.x_coord, player.y_coord)
+        dungeon.update_board(x, y, player.x_coord, player.y_coord, player.avatar)
+        
+        for monster in monsters_list:
+            if collision == monster.avatar:
+                common.fight(player,monster)
+
 
 if __name__ == "__main__":
     main()

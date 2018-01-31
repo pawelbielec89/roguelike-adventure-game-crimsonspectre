@@ -12,10 +12,10 @@ class Board:
         self.ITEM = '\033[30;47m#\033[0m'
 
 
-    def draw_board(self):  # print the list given as an argument
+    def draw_board(self):  
         os.system("clear")
 
-        for row in self.board: # loop through first dimension of board
+        for row in self.board:
             print(*row, sep="")
 
 
@@ -130,12 +130,10 @@ class Board:
     
     
     def check_collision(self, x, y):
-        if self.board[x][y] == self.WALL:
-            return True
-        else:
-            return False
+        return self.board[x][y]
 
     
     def update_board(self, previous_x, previous_y, new_x, new_y, avatar):
         self.board[new_x][new_y] = avatar
         self.board[previous_x][previous_y] = self.FLOOR
+        self.draw_board()

@@ -1,4 +1,6 @@
 import os
+import player_module
+import board_module
 
 def getch():    # define function getch() to read exactly one character from user's input
     import sys, tty, termios    # include librares sys, tty and termios to the project
@@ -17,3 +19,20 @@ def set_step(starting_point, destination):
     else:
         return 1
 
+def fight(player, enemy):
+    attacker = player
+    defender = enemy
+    while player.health_points > 0 and enemy.health_points > 0:
+        hitted = attacker.attack(defender)
+        if hitted:
+            print("{} attack  {} and dealt {} damage. {} HP left".format(attacker.name, defender.name, str(attacker.damage), defender.health_points))
+        else:
+            print("{} dodged.".format(defender.name, defender.health_points))
+        attacker, defender = defender, attacker
+
+    if player.health_points <= 0:
+        pass #GAMEOVER
+    else:
+        print("You defeated {}! press any key to continue...".format(enemy.name))
+        enemy.reset_hp()
+        getch()
