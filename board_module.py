@@ -1,6 +1,6 @@
 import common
 import os
-from random import randint
+from random import randint, uniform
 
 class Board:
 
@@ -9,14 +9,30 @@ class Board:
         self.width = width
         self.WALL = ' ' 
         self.FLOOR = '\033[37;47m#\033[0m'
+        self.ITEM = '\033[30;47m#\033[0m'
 
 
     def draw_board(self):  # print the list given as an argument
         os.system("clear")
 
-        for i in self.board: # loop through first dimension of board
-            print(*i, sep="")
+        for row in self.board: # loop through first dimension of board
+            print(*row, sep="")
 
+
+    def calculate_dropping_chance(self, probability):
+        if uniform(0,1) < probability:
+            return True
+        else:
+            return False
+
+    def drop_items(self):
+        for row in range(len(self.board)):
+            for column in range(len(self.board[row])):
+                is_dropped = self.calculate_dropping_chance(0.02)
+                if self.board[row][column] == self.FLOOR and is_dropped:
+                    self.board[row][column] = self.ITEM
+
+                    
 
     def generate_corridor(self, from_x, to_x, from_y, to_y):
 
@@ -77,6 +93,7 @@ class Board:
             from_x, from_y = to_x, to_y
 
         self.board[1][1] = avatar       
+        self.drop_items()
 
     def build_board(self):
         BOARD_HEIGHT = self.height  
