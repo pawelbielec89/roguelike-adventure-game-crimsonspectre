@@ -3,9 +3,9 @@ import os
 import sys
 from time import time
 from tabulate import tabulate
+import player_module
 from board_module import Board
 import common
-from player_module import Character
 
 def boss():
     print_text.printed("boss.txt")
@@ -20,7 +20,7 @@ def intro():
             You don't feel much,
             You have only one desire - BLOOD""")
     input("\nPress Enter to continue...")
-
+    boss()
 
 def play_game():
     start = time()
@@ -28,23 +28,27 @@ def play_game():
     x = 1
     y = 1
 
-    dungeon = Board(40,100)
-    dungeon.generate_dungeon()
+    inventory = {}
 
-    player_character = Character(1,1,"Player", "\033[31;47mV\033[0m", 100, 10, 10, "male")
+    player = player_module.Player(1,1,"Player", "V", 100, 10, 10, "male", 100, inventory)
+
+    dungeon = Board(40,100)
+    dungeon.generate_dungeon(player.avatar)
 
     while True:
-        os.system("clear")
         dungeon.draw_board()
         player_character.move(dungeon)
 
     your_time = int(time() - start)
     high_scores(your_time)
 
-
 def helps():
     os.system("clear")
     print_text.printed("help.txt")
+    print(""" 'W' --> move UP
+              'S' --> move DOWN
+              'A' --> move LEFT
+              'D' --> move RIGHT""")
     input("Press Enter to continue...")
 
 
