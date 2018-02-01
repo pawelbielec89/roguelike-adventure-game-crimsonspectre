@@ -6,21 +6,22 @@ from tabulate import tabulate
 import player_module
 from board_module import Board
 import common
+import cold_warm_hot
 
 def boss():
     print_text.printed("boss.txt")
-    input("\nPress Enter to continue...")
+    print("HA HA HA.... If You want to defeated me, solve the riddle: ")
+    cold-warm-hot.main()
 
 def intro():
     os.system("clear")
     print_text.printed("intro.txt")
-    print("""\t\tYou wake up in a dark basement,
-            slightly stunned and confused,
-            You do not remember anything,
-            You don't feel much,
-            You have only one desire - BLOOD""")
-    input("\nPress Enter to continue...")
-    boss()
+    print("""\n\t\tYou wake up in a dark basement, slightly stunned and confused,
+    You do not remember anything, don't feel much, have only one desire - BLOOD
+    move around the corridors and basement rooms, collect items to reach BOSS,
+    and take revenge for changing you into a Vampire.... but remember that
+    you need a BLOOD candle for life....""")
+    input("\nPress Enter to start game...")
 
 def play_game():
     start = time()
@@ -45,17 +46,20 @@ def play_game():
 def helps():
     os.system("clear")
     print_text.printed("help.txt")
-    print(""" 'W' --> move UP
-              'S' --> move DOWN
-              'A' --> move LEFT
-              'D' --> move RIGHT""")
+    print("""
+              W --> move UP
+              S --> move DOWN
+              A --> move LEFT
+              D --> move RIGHT
+
+              """)
     input("Press Enter to continue...")
 
 
 def show_scores():
     os.system("clear")
     print_text.printed("scores.txt")
-    headers = ["name", "time spent"]
+    headers = ["name", "time spent", "level"]
     with open("high_score.txt", "r") as file:
         lines = file.readlines()
     table = [element.replace("\n", "").split(",") for element in lines]
@@ -65,8 +69,9 @@ def show_scores():
 
 
 def high_scores(your_time):
+    lives = 2
     name = input("What's your name?:\t")
-    high_score = "{}, {}".format(name, your_time)
+    high_score = "{}, {}, {}".format(name, your_time, lives)
     saving_to_file_highscore(high_score)
 
 
@@ -79,7 +84,19 @@ def saving_to_file_highscore(high_score):
 def info():
     os.system("clear")
     print_text.printed("info.txt")
-    input("Press Enter to continue...")
+    input("\nPress Enter to continue...")
+
+
+def win():
+    os.system("clear")
+    print_text.printed("you_win.txt")
+    input("\nPress Enter to continue...")
+
+
+def lose():
+    os.system("clear")
+    print_text.printed("you_lose.txt")
+    input("\nPress Enter to continue...")
 
 
 def choose():

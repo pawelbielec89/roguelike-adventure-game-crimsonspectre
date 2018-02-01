@@ -1,4 +1,4 @@
-Rafal, 0
-Raf, 0
-Eryk, 0
-Raficlass, 0
+Rafal, 0, 2
+Raf, 0, 2
+Eryk, 0, 2
+Raficlass, 0, 2
