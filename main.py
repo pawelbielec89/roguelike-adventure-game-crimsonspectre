@@ -2,6 +2,7 @@ import os
 import sys
 import common
 import player_module
+from statistics_module import Statistics
 from board_module import Board
 from random import randint
 from time import time
@@ -49,37 +50,53 @@ def choose():
 
 
 def handle_game():
+    ITEM = '\033[30;47m#\033[0m'
+    DOORS = '\033[0;33m#\033[0m'
+    player_statistics = Statistics()
+    player_statistics.set_statistics()
+    player = player_module.Player(avatar = "V", statistics = player_statistics, inventory = {})
     common.print_text("arts/intro.txt")
     common.wait_for_enter()
     start = time()
 
-    monsters = [["Rat", "R", 20, 20, 5, 2],
-                ["Bat", "B", 40, 40, 10, 4],
-                ["Snake", "S", 60, 60, 15, 6]]
+    monsters = [["R", "Rat", 20, 20, 5, 2],
+                ["B", "Bat", 40, 40, 10, 4],
+                ["S", "Snake", 60, 60, 15, 6]]
     monsters_list = []
     number_of_monsters = randint(10,20)
-    inventory = {}
 
-    player = player_module.Player(1,1,"Player", "V", 30, 15, 1, "male", 100, inventory)
+
 
     for monster_properties in monsters:
         monster = player_module.Character(*monster_properties)
         monsters_list.append(monster)
 
-    dungeon = Board(40,100)
+    dungeon = Board(35,100)
     level = 0
     in_game = True
 
-    while level <= 3 and in_game:
+    while level < 1 and in_game:
         level += 1
         in_level = True
         dungeon.generate_dungeon(player.avatar, monsters_list)
+        player.x_coord = 1
+        player.y_coord = 1
 
         while in_level and in_game:
             dungeon.draw_board()
+            common.print_statistics(player)
             x,y = player.move(dungeon, monsters_list)
+            player.thirst -=1
+            if(player.thirst < 0):
+                player.thirst = 0
+                player.health_points -= 1
+
             collision = dungeon.check_collision(player.x_coord, player.y_coord)
+
             dungeon.update_board(x, y, player.x_coord, player.y_coord, player.avatar)
+
+            if collision == DOORS:
+                in_level = False
 
             for monster in monsters_list:
                 if collision == monster.avatar:

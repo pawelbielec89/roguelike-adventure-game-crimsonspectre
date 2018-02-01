@@ -5,3 +5,13 @@ Raficlass, 0, 2
 Player, 6
 Player, 13, 1
 Player, 51, 1
+Eryk, 9, 1
+Eryk, 16, 1
+Eryk, 20, 1
+p, 17, 1
+p, 42, 1
+e, 16, 1
+e, 76, 1
+eryk, 73, 1
+e, 13, 1
+e, 19, 1

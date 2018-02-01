@@ -1,6 +1,7 @@
 import os
 import player_module
 import board_module
+import random
 
 def getch():    # define function getch() to read exactly one character from user's input
     import sys, tty, termios    # include librares sys, tty and termios to the project
@@ -43,49 +44,53 @@ def save_highscores(player, your_time, level):
         f.write("\n")
 
 
+def print_statistics(statistics):
+    print("Thirst: " + "=" * statistics.thirst)
+    print("Name: " + str(statistics.name))
+    print("HP: " + str(statistics.health_points))
+    print("Dmg: " + str(statistics.damage))
+    print("Dex: " + str(statistics.dexterity))
+
 def win():
     print_text("arts/you_win.txt")
-    save_highscores()
+    wait_for_enter()
 
 
 def cold_warm_hot():
-    is_play = True
+    repeat = True
+    guesses = 0
+    searched_number = random.sample([num for num in range(10)], 3)
 
-    while is_play:
-        guesses = 0
-        searched_number = sample([num for num in range(10)], 3)
+    print(searched_number)
 
-        # print(searched_number)
+    while guesses < 10 and repeat:
+        user_guess = input("I am thinking of a 3-digit number. Try to guess what it is: ")
+        user_guess = list(map(int, user_guess))
+        returns = []
 
-        while guesses < 10:
-            user_guess = input("I am thinking of a 3-digit number. Try to guess what it is: ")
-            user_guess = list(map(int, user_guess))
-            returns = []
+        if (user_guess[0] in searched_number or
+            user_guess[1] in searched_number or
+            user_guess[2] in searched_number):
 
-            if (user_guess[0] in searched_number or
-                user_guess[1] in searched_number or
-                user_guess[2] in searched_number):
+            for i, number in enumerate(user_guess):
+                if number in searched_number:
+                    if number == searched_number[i]:
+                        returns.append("Hot")
+                    else:
+                        returns.append("Warm")
+        else:
+            returns.append("Cold")
 
-                for i, number in enumerate(user_guess):
-                    if number in searched_number:
-                        if number == searched_number[i]:
-                            returns.append("Hot")
-                        else:
-                            returns.append("Warm")
-            else:
-                returns.append("Cold")
+        guesses += 1
 
-            if returns == 3 * ["Hot"]:
-                win()
+        if returns == 3 * ["Hot"]:
+            repeat = False
+            win()
 
-            print("Guess #{}".format(str(guesses+1)))
-            print("".join(map(str, user_guess)))
-            print(", ".join(returns))
-            guesses += 1
 
 
 def fight_boss():
-    common.print_text("arts/boss.txt")
+    print_text("arts/boss.txt")
     cold_warm_hot()
 
 
@@ -121,6 +126,7 @@ def fight(player, enemy):
 
     if player.health_points > 0:
         print("You defeated {}! press any key to continue...".format(enemy.name))
+        player.thirst = 10
         enemy.reset_hp()
         getch()
     else:
