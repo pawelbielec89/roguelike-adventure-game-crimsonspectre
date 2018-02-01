@@ -31,7 +31,8 @@ def fight(player, enemy):
         attacker, defender = defender, attacker
 
     if player.health_points <= 0:
-        pass #GAMEOVER
+        print("GAME OVER")
+        getch()
     else:
         print("You defeated {}! press any key to continue...".format(enemy.name))
         enemy.reset_hp()

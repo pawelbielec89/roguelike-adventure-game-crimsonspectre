@@ -122,7 +122,7 @@ class Board:
                 if i == 0 or i == BOARD_HEIGHT - 1 or j == 0 or j == BOARD_WIDTH - 1:    # do the following statements if conditions are fullfilled
                     line.append(self.WALL)   # add constant WALL ('#') to the list line
                 else:   # do the following statement if conditions are not fullfilled
-                    line.append(self.FLOOR)  # add constant FLOOR (' ') to the list line
+                    line.append(self.FLOOR)  # add constant FLOOR (' ') to the listline
             self.board.append(line)  # add list line to the list board
         
         # set player position

@@ -13,7 +13,7 @@ def main():
     number_of_monsters = randint(10,20)
     inventory = {}
 
-    player = player_module.Player(1,1,"Player", "V", 10000, 15, 1, "male", 100, inventory)
+    player = player_module.Player(1,1,"Player", "V", 30, 15, 1, "male", 100, inventory)
 
     for monster_properties in monsters:
         monster = player_module.Character(*monster_properties)
