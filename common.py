@@ -37,8 +37,8 @@ def print_menu(list_options):
 
     print("\n" + "-"*40 + "\nPlease enter a letter from bracket: ", end="")
 
-def save_highscores(player, your_time, level):
-    high_score = "{}, {}, {}".format(player.name, your_time, level)
+def save_highscores(player, your_time, level, monsters):
+    high_score = "{}, {}, {}, {}".format(player.name, your_time, level, monsters)
     with open("high_score.txt", "a") as f:
         f.write(high_score)
         f.write("\n")
@@ -46,10 +46,40 @@ def save_highscores(player, your_time, level):
 
 def print_statistics(statistics):
     print("Thirst: " + "=" * statistics.thirst)
-    print("Name: " + str(statistics.name))
     print("HP: " + str(statistics.health_points))
     print("Dmg: " + str(statistics.damage))
     print("Dex: " + str(statistics.dexterity))
+
+
+def print_inventory(inventory):
+    sum_count = 0
+    sum_weight = 0
+    count = "count"
+    weight = "weight"
+    key_name = "item name"
+
+    max_len_key = [key for key in inventory.keys()]
+    lenght_key = len(max(max_len_key))
+
+    if lenght_key < len(key_name):
+        lenght_key = len(key_name)
+
+    headers = ("{:>15}" "{:>" + str(len(count) + 3) + "}"\
+    "{:>" + str(len(weight) + 3) + "}").format(key_name, count, weight)
+    print("Inventory:")
+    print(headers)
+    print("-"*len(headers))
+
+    for key, value in inventory.items():
+        sum_count += value[0]
+        sum_weight += value[1]
+        print (("{:>15}" "{:>" + str(len(count) + 3) + "}"\
+        "{:>" + str(len(weight) + 3) + "}").format(key, value[0], value[1]))
+    print("-"*len(headers))
+    print(("{:>15}" "{:>" + str(len(count) + 3) + "}"\
+    "{:>" + str(len(weight) + 3) + "}").format("total: ", sum_count, sum_weight))
+    print("\nAvailable storage: {}".format(100-sum_weight))
+    wait_for_enter()
 
 def win():
     print_text("arts/you_win.txt")
@@ -60,8 +90,6 @@ def cold_warm_hot():
     repeat = True
     guesses = 0
     searched_number = random.sample([num for num in range(10)], 3)
-
-    print(searched_number)
 
     while guesses < 10 and repeat:
         user_guess = input("I am thinking of a 3-digit number. Try to guess what it is: ")
@@ -82,6 +110,8 @@ def cold_warm_hot():
             returns.append("Cold")
 
         guesses += 1
+
+        print(", ".join(returns))
 
         if returns == 3 * ["Hot"]:
             repeat = False
@@ -114,6 +144,7 @@ def check_game_status(player):
 
 
 def fight(player, enemy):
+    os.system("clear")
     attacker = player
     defender = enemy
     while player.health_points > 0 and enemy.health_points > 0:
@@ -126,7 +157,8 @@ def fight(player, enemy):
 
     if player.health_points > 0:
         print("You defeated {}! press any key to continue...".format(enemy.name))
-        player.thirst = 10
+        player.monsters_killed += 1
+        player.thirst = 25
         enemy.reset_hp()
         getch()
     else:

@@ -4,6 +4,7 @@ import common
 import player_module
 from statistics_module import Statistics
 from board_module import Board
+import random
 from random import randint
 from time import time
 from tabulate import tabulate
@@ -50,6 +51,9 @@ def choose():
 
 
 def handle_game():
+    loot = {'sword': 20,
+             'health potion': 1,
+             'braces': 5}
     ITEM = '\033[30;47m#\033[0m'
     DOORS = '\033[0;33m#\033[0m'
     player_statistics = Statistics()
@@ -75,7 +79,7 @@ def handle_game():
     level = 0
     in_game = True
 
-    while level < 1 and in_game:
+    while level < 3 and in_game:
         level += 1
         in_level = True
         dungeon.generate_dungeon(player.avatar, monsters_list)
@@ -85,11 +89,17 @@ def handle_game():
         while in_level and in_game:
             dungeon.draw_board()
             common.print_statistics(player)
-            x,y = player.move(dungeon, monsters_list)
-            player.thirst -=1
-            if(player.thirst < 0):
-                player.thirst = 0
-                player.health_points -= 1
+            user_input = common.getch()
+            if user_input == 'i':
+                common.print_inventory(player.inventory)
+            elif user_input == 'q':
+                exit(0)
+            else:
+                x,y = player.move(dungeon, monsters_list, user_input)
+                player.thirst -=1
+                if(player.thirst < 0):
+                    player.thirst = 0
+                    player.health_points -= 1
 
             collision = dungeon.check_collision(player.x_coord, player.y_coord)
 
@@ -97,6 +107,9 @@ def handle_game():
 
             if collision == DOORS:
                 in_level = False
+            elif collision == ITEM:
+                item_to_add = random.choice(list(loot.items()))
+                player.add_to_inventory(item_to_add)
 
             for monster in monsters_list:
                 if collision == monster.avatar:
@@ -109,13 +122,13 @@ def handle_game():
         common.game_over()
 
     your_time = int(time() - start)
-    common.save_highscores(player, your_time, level)
+    common.save_highscores(player, your_time, level, player.monsters_killed)
 
 
 def show_highscores():
     common.print_text("arts/scores.txt")
 
-    headers = ["name", "time spent", "level"]
+    headers = ["name", "time spent", "level", "monsters killed"]
     with open("high_score.txt", "r") as file:
         lines = file.readlines()
     table = [element.replace("\n", "").split(",") for element in lines]

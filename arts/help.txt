@@ -9,3 +9,4 @@ W --> move UP
 S --> move DOWN
 A --> move LEFT
 D --> move RIGHT
+I --> open inventory
