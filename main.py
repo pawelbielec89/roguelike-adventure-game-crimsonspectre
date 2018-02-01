@@ -1,102 +1,32 @@
-import print_text
 import os
 import sys
-from time import time
-from tabulate import tabulate
+import common
 import player_module
 from board_module import Board
-import common
-import cold_warm_hot
+from random import randint
+from time import time
+from tabulate import tabulate
 
-def boss():
-    print_text.printed("boss.txt")
-    print("HA HA HA.... If You want to defeated me, solve the riddle: ")
-    cold-warm-hot.main()
 
-def intro():
-    os.system("clear")
-    print_text.printed("intro.txt")
-    print("""\n\t\tYou wake up in a dark basement, slightly stunned and confused,
-    You do not remember anything, don't feel much, have only one desire - BLOOD
-    move around the corridors and basement rooms, collect items to reach BOSS,
-    and take revenge for changing you into a Vampire.... but remember that
-    you need a BLOOD candle for life....""")
-    input("\nPress Enter to start game...")
+def main():
+    main_menu()
 
-def play_game():
-    start = time()
-    intro()
-    x = 1
-    y = 1
-
-    inventory = {}
-
-    player = player_module.Player(1,1,"Player", "V", 100, 10, 10, "male", 100, inventory)
-
-    dungeon = Board(40,100)
-    dungeon.generate_dungeon(player.avatar)
-
+def main_menu():
     while True:
-        dungeon.draw_board()
-        player_character.move(dungeon)
+        try:
+            choose()
+        except KeyError as err:
+            print_error_message(err)
 
-    your_time = int(time() - start)
-    high_scores(your_time)
-
-def helps():
-    os.system("clear")
-    print_text.printed("help.txt")
-    print("""
-              W --> move UP
-              S --> move DOWN
-              A --> move LEFT
-              D --> move RIGHT
-
-              """)
-    input("Press Enter to continue...")
+def show_info():
+    common.print_text("arts/info.txt")
+    common.wait_for_enter()
 
 
-def show_scores():
-    os.system("clear")
-    print_text.printed("scores.txt")
-    headers = ["name", "time spent", "level"]
-    with open("high_score.txt", "r") as file:
-        lines = file.readlines()
-    table = [element.replace("\n", "").split(",") for element in lines]
-    print (tabulate(table, headers, tablefmt="fancy_grid"))
-    print("\n")
-    input("Press Enter to continue...")
+def show_help():
+    common.print_text("arts/help.txt")
+    common.wait_for_enter()
 
-
-def high_scores(your_time):
-    lives = 2
-    name = input("What's your name?:\t")
-    high_score = "{}, {}, {}".format(name, your_time, lives)
-    saving_to_file_highscore(high_score)
-
-
-def saving_to_file_highscore(high_score):
-    with open("high_score.txt", "a") as f:
-        f.write(high_score)
-        f.write("\n")
-
-
-def info():
-    os.system("clear")
-    print_text.printed("info.txt")
-    input("\nPress Enter to continue...")
-
-
-def win():
-    os.system("clear")
-    print_text.printed("you_win.txt")
-    input("\nPress Enter to continue...")
-
-
-def lose():
-    os.system("clear")
-    print_text.printed("you_lose.txt")
-    input("\nPress Enter to continue...")
 
 
 def choose():
@@ -105,33 +35,82 @@ def choose():
                 "(H)elp",
                 "(I)nfo",
                 "(T)erminate"]
-    print_text.print_menu(list_options)
+    common.print_menu(list_options)
 
-    option = input("\n" + "-"*40 + "\nPlease enter a letter from bracket: ").lower()
-    if option == "p":
-        play_game()
-    elif option == "s":
-        show_scores()
-    elif option == "h":
-        helps()
-    elif option == "i":
-        info()
-    elif option == "t":
-        sys.exit(0)
+    user_choice = common.getch().lower()
+
+    functions = {"p": handle_game,
+                 "s": show_highscores,
+                 "h": show_help,
+                 "i": show_info,
+                 "t": sys.exit}
+
+    functions[user_choice]()
+
+
+def handle_game():
+    common.print_text("arts/intro.txt")
+    common.wait_for_enter()
+    start = time()
+
+    monsters = [["Rat", "R", 20, 20, 5, 2],
+                ["Bat", "B", 40, 40, 10, 4],
+                ["Snake", "S", 60, 60, 15, 6]]
+    monsters_list = []
+    number_of_monsters = randint(10,20)
+    inventory = {}
+
+    player = player_module.Player(1,1,"Player", "V", 30, 15, 1, "male", 100, inventory)
+
+    for monster_properties in monsters:
+        monster = player_module.Character(*monster_properties)
+        monsters_list.append(monster)
+
+    dungeon = Board(40,100)
+    level = 0
+    in_game = True
+
+    while level <= 3 and in_game:
+        level += 1
+        in_level = True
+        dungeon.generate_dungeon(player.avatar, monsters_list)
+
+        while in_level and in_game:
+            dungeon.draw_board()
+            x,y = player.move(dungeon, monsters_list)
+            collision = dungeon.check_collision(player.x_coord, player.y_coord)
+            dungeon.update_board(x, y, player.x_coord, player.y_coord, player.avatar)
+
+            for monster in monsters_list:
+                if collision == monster.avatar:
+                    common.fight(player, monster)
+            in_game = common.check_game_status(player)
+
+    if in_game:
+        common.fight_boss()
     else:
-        raise KeyError("There is no such option.")
+        common.game_over()
+
+    your_time = int(time() - start)
+    common.save_highscores(player, your_time, level)
+
+
+def show_highscores():
+    common.print_text("arts/scores.txt")
+
+    headers = ["name", "time spent", "level"]
+    with open("high_score.txt", "r") as file:
+        lines = file.readlines()
+    table = [element.replace("\n", "").split(",") for element in lines]
+    print (tabulate(table, headers, tablefmt="fancy_grid"))
+
+    common.wait_for_enter()
+
+
 
 
 def print_error_message(message):
     print(message)
-
-
-def main():
-    while True:
-        try:
-            choose()
-        except KeyError as err:
-            print_error_message(err)
 
 
 if __name__ == '__main__':

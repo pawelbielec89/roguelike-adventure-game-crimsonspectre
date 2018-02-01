@@ -1,7 +1,7 @@
 from random import sample
 
 
-def main():
+def cold_warm_hot():
     is_play = True
 
     while is_play:
